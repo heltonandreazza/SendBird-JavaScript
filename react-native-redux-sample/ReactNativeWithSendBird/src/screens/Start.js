@@ -35,6 +35,7 @@ class Start extends Component {
     });
   }
   redirectTo(page, params) {
+    console.info('redirectTo', page, params)
     this.props.navigation.dispatch(
       StackActions.reset({
         index: 0,

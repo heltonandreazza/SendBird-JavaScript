@@ -4,8 +4,9 @@ import AsyncStorage from '@react-native-community/async-storage';
 import firebase from 'react-native-firebase';
 
 // const APP_ID = '078105E7-BD8C-43C9-A583-59E334353965'; // test
-const APP_ID = '9DA1B1F4-0BE6-4DA8-82C5-2E81DAB56F23'; // sample
-
+// const APP_ID = '9DA1B1F4-0BE6-4DA8-82C5-2E81DAB56F23'; // sample
+const APP_ID = '97086E54-0E70-4F07-B1DD-F468915AA1B6'; // ours
+console.log(APP_ID)
 export const sbRegisterPushToken = () => {
   return new Promise((resolve, reject) => {
     const sb = SendBird.getInstance();
@@ -20,10 +21,12 @@ export const sbRegisterPushToken = () => {
             if (token) {
               sb.registerAPNSPushTokenForCurrentUser(token, (result, error) => {
                 if (!error) {
+                  console.info('sbRegisterPushToken resolved', token)
                   resolve();
                 } else reject(error);
               });
             } else {
+              console.info('sbRegisterPushToken resolved', token)
               resolve();
             }
           })
@@ -38,10 +41,12 @@ export const sbRegisterPushToken = () => {
             if (token) {
               sb.registerGCMPushTokenForCurrentUser(token, (result, error) => {
                 if (!error) {
+                  console.info('sbRegisterPushToken resolved', token)
                   resolve();
                 } else reject(error);
               });
             } else {
+              console.info('sbRegisterPushToken resolved', token)
               resolve();
             }
           })
@@ -68,10 +73,12 @@ export const sbUnregisterPushToken = () => {
               .ios.getAPNSToken()
               .then(apnsToken => {
                 if (!apnsToken) {
+                  console.info('sbUnregisterPushToken resolved', apnsToken)
                   return resolve();
                 }
                 sb.unregisterAPNSPushTokenForCurrentUser(apnsToken, (result, error) => {
                   if (!error) {
+                    console.info('sbUnregisterPushToken resolved', apnsToken)
                     resolve();
                   } else reject(error);
                 });
@@ -80,6 +87,7 @@ export const sbUnregisterPushToken = () => {
           } else {
             sb.unregisterGCMPushTokenForCurrentUser(token, (result, error) => {
               if (!error) {
+                console.info('sbUnregisterPushToken resolved', token)
                 resolve();
               } else reject(error);
             });
@@ -107,6 +115,7 @@ export const sbConnect = (userId, nickname) => {
       if (error) {
         reject('SendBird Login Failed.');
       } else {
+        console.info('sbConnect resolved', userId, nickname)
         resolve(sbUpdateProfile(nickname));
       }
     });
@@ -126,6 +135,7 @@ export const sbUpdateProfile = nickname => {
         reject('Update profile failed.');
       } else {
         AsyncStorage.setItem('user', JSON.stringify(user), () => {
+          console.info('sbUpdateProfile resolved', nickname)
           resolve(user);
         });
       }
@@ -139,10 +149,12 @@ export const sbDisconnect = () => {
     if (sb) {
       AsyncStorage.removeItem('user', () => {
         sb.disconnect(() => {
+          console.info('sbDisconnect resolved')
           resolve(null);
         });
       });
     } else {
+      console.info('sbDisconnect resolved')
       resolve(null);
     }
   });
@@ -151,6 +163,10 @@ export const sbDisconnect = () => {
 export const sbGetCurrentInfo = () => {
   const sb = SendBird.getInstance();
   if (sb.currentUser) {
+    console.info('sbGetCurrentInfo resolved', {
+      profileUrl: sb.currentUser.profileUrl,
+      nickname: sb.currentUser.nickname
+    })
     return {
       profileUrl: sb.currentUser.profileUrl,
       nickname: sb.currentUser.nickname
@@ -166,6 +182,7 @@ export const sbUserBlock = blockUserId => {
       if (error) {
         reject(error);
       } else {
+        console.info('sbUserBlock resolved', blockUserId)
         resolve(user);
       }
     });
@@ -179,6 +196,7 @@ export const sbUserUnblock = unblockUserId => {
       if (error) {
         reject(error);
       } else {
+        console.info('sbUserUnblock resolved', unblockUserId)
         resolve(user);
       }
     });
@@ -187,6 +205,7 @@ export const sbUserUnblock = unblockUserId => {
 
 export const sbCreateBlockedUserListQuery = () => {
   const sb = SendBird.getInstance();
+  console.info('sbCreateBlockedUserListQuery resolved')
   return sb.createBlockedUserListQuery();
 };
 
@@ -196,6 +215,7 @@ export const sbGetBlockUserList = blockedUserListQuery => {
       if (error) {
         reject(error);
       } else {
+        console.info('sbGetBlockUserList resolved', blockedUsers)
         resolve(blockedUsers);
       }
     });

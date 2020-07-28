@@ -53,12 +53,14 @@ import {
 import SendBird from 'sendbird';
 
 export const initChatScreen = () => {
+  console.info('initChatScreen')
   const sb = SendBird.getInstance();
   sb.removeAllChannelHandlers();
   return { type: INIT_CHAT_SCREEN };
 };
 
 export const getChannelTitle = (channelUrl, isOpenChannel) => {
+  console.info('getChannelTitle')
   return dispatch => {
     if (isOpenChannel) {
       return sbGetOpenChannel(channelUrl)
@@ -89,6 +91,7 @@ export const getChannelTitle = (channelUrl, isOpenChannel) => {
 };
 
 export const createChatHandler = (channelUrl, isOpenChannel) => {
+  console.info('createChatHandler')
   return dispatch => {
     if (isOpenChannel) {
       return sbGetOpenChannel(channelUrl)
@@ -210,6 +213,7 @@ const registerGroupChannelHandler = (channelUrl, dispatch) => {
 };
 
 export const getPrevMessageList = previousMessageListQuery => {
+  console.info('getPrevMessageList')
   return dispatch => {
     if (previousMessageListQuery.hasMore) {
       return sbGetMessageList(previousMessageListQuery)
@@ -228,6 +232,7 @@ export const getPrevMessageList = previousMessageListQuery => {
 };
 
 export const onSendButtonPress = (channelUrl, isOpenChannel, textMessage) => {
+  console.info('onSendButtonPress')
   return dispatch => {
     if (isOpenChannel) {
       return sbGetOpenChannel(channelUrl)
@@ -263,6 +268,7 @@ const sendTextMessage = (dispatch, channel, textMessage) => {
 };
 
 export const onUserBlockPress = blockUserId => {
+  console.info('onUserBlockPress')
   return dispatch => {
     return sbUserBlock(blockUserId)
       .then(user => dispatch({ type: USER_BLOCK_SUCCESS }))
@@ -271,10 +277,12 @@ export const onUserBlockPress = blockUserId => {
 };
 
 export const onUserMessagePress = message => {
+  console.info('onUserMessagePress')
   return { type: USER_MESSAGE_PRESS, message: message };
 };
 
 export const onMessageDelete = (channelUrl, isOpenChannel, message) => {
+  console.info('onMessageDelete')
   return dispatch => {
     let promise = null;
     if (isOpenChannel) {
@@ -293,6 +301,7 @@ export const onMessageDelete = (channelUrl, isOpenChannel, message) => {
 };
 
 export const onUserUpdateMessage = (channelUrl, isOpenChannel, message, contents) => {
+  console.info('onUserUpdateMessage')
   return dispatch => {
     let promise = null;
     if (isOpenChannel) {
@@ -315,14 +324,17 @@ export const onUserUpdateMessage = (channelUrl, isOpenChannel, message, contents
 };
 
 export const onUserMessageCopy = () => {
+  console.info('onUserMessageCopy')
   return { type: MESSAGE_COPY };
 };
 
 export const clearMessageSelection = () => {
+  console.info('clearMessageSelection')
   return { type: USER_MESSAGE_SELECTION_CLEAR };
 };
 
 export const onFileButtonPress = (channelUrl, isOpenChannel, source) => {
+  console.info('onFileButtonPress')
   return dispatch => {
     if (isOpenChannel) {
       return sbGetOpenChannel(channelUrl)
@@ -367,6 +379,7 @@ const sendFileMessage = (dispatch, channel, file) => {
 };
 
 export const typingStart = channelUrl => {
+  console.info('typingStart')
   return dispatch => {
     return sbTypingStart(channelUrl)
       .then(response => dispatch({ type: SEND_TYPING_START_SUCCESS }))
@@ -375,6 +388,7 @@ export const typingStart = channelUrl => {
 };
 
 export const typingEnd = channelUrl => {
+  console.info('typingEnd')
   return dispatch => {
     return sbTypingEnd(channelUrl)
       .then(response => dispatch({ type: SEND_TYPING_END_SUCCESS }))
@@ -383,6 +397,7 @@ export const typingEnd = channelUrl => {
 };
 
 export const channelExit = (channelUrl, isOpenChannel) => {
+  console.info('channelExit')
   return dispatch => {
     if (isOpenChannel) {
       return sbGetOpenChannel(channelUrl)

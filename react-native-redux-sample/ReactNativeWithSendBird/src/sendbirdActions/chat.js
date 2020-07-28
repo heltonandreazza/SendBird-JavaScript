@@ -3,6 +3,7 @@ import { sbGetGroupChannel } from './groupChannel';
 import SendBird from 'sendbird';
 
 export const sbCreatePreviousMessageListQuery = (channelUrl, isOpenChannel) => {
+  console.info('sbCreatePreviousMessageListQuery')
   return new Promise((resolve, reject) => {
     if (isOpenChannel) {
       sbGetOpenChannel(channelUrl)
@@ -17,6 +18,7 @@ export const sbCreatePreviousMessageListQuery = (channelUrl, isOpenChannel) => {
 };
 
 export const sbGetMessageList = previousMessageListQuery => {
+  console.info('sbGetMessageList')
   const limit = 30;
   const reverse = true;
   return new Promise((resolve, reject) => {
@@ -31,6 +33,7 @@ export const sbGetMessageList = previousMessageListQuery => {
 };
 
 export const sbSendTextMessage = (channel, textMessage, callback) => {
+  console.info('sbSendTextMessage')
   if (channel.isGroupChannel()) {
     channel.endTyping();
   }
@@ -40,6 +43,7 @@ export const sbSendTextMessage = (channel, textMessage, callback) => {
 };
 
 export const sbSendFileMessage = (channel, file, callback) => {
+  console.info('sbSendFileMessage')
   const data = '';
   const customType = '';
   const thumbSizeList = [{ maxWidth: 160, maxHeight: 160 }];
@@ -59,6 +63,7 @@ export const sbSendFileMessage = (channel, file, callback) => {
 };
 
 export const sbTypingStart = channelUrl => {
+  console.info('sbTypingStart')
   return new Promise((resolve, reject) => {
     sbGetGroupChannel(channelUrl)
       .then(channel => {
@@ -70,6 +75,7 @@ export const sbTypingStart = channelUrl => {
 };
 
 export const sbTypingEnd = channelUrl => {
+  console.info('sbTypingEnd')
   return new Promise((resolve, reject) => {
     sbGetGroupChannel(channelUrl)
       .then(channel => {
@@ -83,6 +89,7 @@ export const sbTypingEnd = channelUrl => {
 };
 
 export const sbIsTyping = channel => {
+  console.info('sbIsTyping')
   if (channel.isTyping()) {
     const typingMembers = channel.getTypingMembers();
     if (typingMembers.length == 1) {
@@ -96,6 +103,7 @@ export const sbIsTyping = channel => {
 };
 
 export const sbChannelDeleteMessage = (channel, message) => {
+  console.info('sbChannelDeleteMessage')
   return new Promise((resolve, reject) => {
     channel.deleteMessage(message, (response, error) => {
       error ? reject(error) : resolve(response);
@@ -104,6 +112,7 @@ export const sbChannelDeleteMessage = (channel, message) => {
 };
 
 export const sbChannelUpdateMessage = (channel, message, contents) => {
+  console.info('sbChannelUpdateMessage')
   return new Promise((resolve, reject) => {
     channel.updateUserMessage(message.messageId, contents, null, null, (response, error) => {
       error ? reject(error) : resolve(response);
@@ -112,6 +121,7 @@ export const sbChannelUpdateMessage = (channel, message, contents) => {
 };
 
 export const sbMarkAsRead = ({ channelUrl, channel }) => {
+  console.info('sbMarkAsRead')
   if (channel) {
     channel.markAsRead();
   } else {

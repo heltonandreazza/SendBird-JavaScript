@@ -33,9 +33,10 @@ class Login extends Component {
         .getToken()
         .then(pushToken => {
           if (pushToken) {
+            console.info('pushToken', pushToken)
             sbRegisterPushToken(pushToken)
-              .then(res => {})
-              .catch(err => {});
+              .then(res => console.info('sbRegisterPushToken succeed!'))
+              .catch(err => console.err(res));
           }
         });
       const resetAction = StackActions.reset({

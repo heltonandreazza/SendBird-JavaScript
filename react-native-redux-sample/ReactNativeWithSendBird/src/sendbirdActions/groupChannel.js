@@ -2,6 +2,7 @@ import SendBird from 'sendbird';
 
 export const sbCreateGroupChannelListQuery = () => {
   const sb = SendBird.getInstance();
+  console.info('sbCreateGroupChannelListQuery resolved')
   return sb.GroupChannel.createMyGroupChannelListQuery();
 };
 
@@ -11,6 +12,7 @@ export const sbGetGroupChannelList = groupChannelListQuery => {
       if (error) {
         reject(error);
       } else {
+        console.info('sbGetGroupChannelList resolved', channels)
         resolve(channels);
       }
     });
@@ -24,6 +26,7 @@ export const sbGetGroupChannel = channelUrl => {
       if (error) {
         reject(error);
       } else {
+        console.info('sbGetGroupChannel resolved', channel)
         resolve(channel);
       }
     });
@@ -39,6 +42,7 @@ export const sbLeaveGroupChannel = channelUrl => {
           if (error) {
             reject(error);
           } else {
+            console.info('sbLeaveGroupChannel resolved', response)
             resolve(response);
           }
         });
@@ -56,6 +60,7 @@ export const sbHideGroupChannel = channelUrl => {
           if (error) {
             reject(error);
           } else {
+            console.info('sbHideGroupChannel resolved', response)
             resolve(response);
           }
         });
@@ -66,6 +71,7 @@ export const sbHideGroupChannel = channelUrl => {
 
 export const sbCreateUserListQuery = () => {
   const sb = SendBird.getInstance();
+  console.info('sbCreateUserListQuery resolved')
   return sb.createApplicationUserListQuery();
 };
 
@@ -75,6 +81,7 @@ export const sbGetUserList = userListQuery => {
       if (error) {
         reject(error);
       } else {
+        console.info('sbGetUserList resolved', users)
         resolve(users);
       }
     });
@@ -88,6 +95,7 @@ export const sbCreateGroupChannel = (inviteUserIdList, isDistinct) => {
       if (error) {
         reject(error);
       } else {
+        console.info('sbCreateGroupChannel resolved', channel)
         resolve(channel);
       }
     });
@@ -102,6 +110,7 @@ export const sbInviteGroupChannel = (inviteUserIdList, channelUrl) => {
           if (error) {
             reject(error);
           } else {
+            console.info('sbInviteGroupChannel resolved', channel)
             resolve(channel);
           }
         });

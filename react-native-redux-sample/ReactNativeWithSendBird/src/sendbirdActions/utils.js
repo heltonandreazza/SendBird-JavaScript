@@ -2,6 +2,7 @@ import SendBird from 'sendbird';
 
 export const sbGetChannelTitle = channel => {
   if (channel.isOpenChannel()) {
+    console.info('sbGetChannelTitle isOpenChannel resolved', channel)
     return channel.name;
   } else {
     const { members } = channel;
@@ -14,13 +15,13 @@ export const sbGetChannelTitle = channel => {
     if (nicknames.length > 21) {
       nicknames = nicknames.substring(0, 17) + '...';
     }
-
+    console.info('sbGetChannelTitle resolved', channel)
     return nicknames;
   }
 };
 
 export const sbAdjustMessageList = list => {
-  return list.map((message, i) => {
+  const messages = list.map((message, i) => {
     message['time'] = sbUnixTimestampToDate(message.createdAt);
     message['readCount'] = 0;
     if (message.isUserMessage() || message.isFileMessage()) {
@@ -47,6 +48,8 @@ export const sbAdjustMessageList = list => {
     }
     return message;
   });
+  console.info('sbAdjustMessageList resolved', messages)
+  return messages
 };
 
 export const sbUnixTimestampToDate = unixTimestamp => {

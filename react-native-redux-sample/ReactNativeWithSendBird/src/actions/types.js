@@ -12,21 +12,21 @@
 // export const UPDATE_PROFILE_FAIL = 'update_profile_fail'
 
 // Open Channel
-export const INIT_OPEN_CHANNEL = 'init_open_channel'
+// export const INIT_OPEN_CHANNEL = 'init_open_channel'
 export const OPEN_CHANNEL_PROGRESS_START = 'open_channel_progress_start'
 export const OPEN_CHANNEL_PROGRESS_END = 'open_channel_progress_end'
-export const OPEN_CHANNEL_LIST_SUCCESS = 'open_channel_list_success'
-export const OPEN_CHANNEL_LIST_FAIL = 'open_channel_list_fail'
+// export const OPEN_CHANNEL_LIST_SUCCESS = 'open_channel_list_success'
+// export const OPEN_CHANNEL_LIST_FAIL = 'open_channel_list_fail'
 
-export const GET_OPEN_CHANNEL_SUCCESS = 'get_open_channel_success'
-export const GET_OPEN_CHANNEL_FAIL = 'get_open_channel_fail'
-export const ADD_OPEN_CHANNEL_ITEM = 'add_open_channel_item'
-export const CLEAR_ADD_OPEN_CHANNEL = 'clear_add_open_channel'
-export const CLEAR_SELECTED_OPEN_CHANNEL = 'clear_selected_open_channel'
+// export const GET_OPEN_CHANNEL_SUCCESS = 'get_open_channel_success'
+// export const GET_OPEN_CHANNEL_FAIL = 'get_open_channel_fail'
+// export const ADD_OPEN_CHANNEL_ITEM = 'add_open_channel_item'
+// export const CLEAR_ADD_OPEN_CHANNEL = 'clear_add_open_channel'
+// export const CLEAR_SELECTED_OPEN_CHANNEL = 'clear_selected_open_channel'
 
-export const INIT_OPEN_CHANNEL_CREATE = 'init_open_channel_create'
-export const OPEN_CHANNEL_CREATE_SUCCESS = 'open_channel_create_success'
-export const OPEN_CHANNEL_CREATE_FAIL = 'open_channel_create_fail'
+// export const INIT_OPEN_CHANNEL_CREATE = 'init_open_channel_create'
+// export const OPEN_CHANNEL_CREATE_SUCCESS = 'open_channel_create_success'
+// export const OPEN_CHANNEL_CREATE_FAIL = 'open_channel_create_fail'
 
 // Group Channel
 export const INIT_GROUP_CHANNEL = 'init_group_channel'

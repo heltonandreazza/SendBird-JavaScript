@@ -1,5 +1,3 @@
-export * from './openChannelActions'
-export * from './openChannelCreateActions'
 export * from './chatActions'
 export * from './memberActions'
 export * from './blockUserActions'

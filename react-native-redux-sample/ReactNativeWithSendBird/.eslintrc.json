@@ -1,0 +1,21 @@
+{
+  "extends": ["airbnb"],
+  "root": true,
+  "rules": {
+    "semi": ["error", "never"],
+    "react/jsx-filename-extension": "off",
+    "no-underscore-dangle": "off",
+    "no-use-before-define": "off",
+    "react/prop-types": "warn",
+    "no-shadow": "warn"
+  },
+  "env": {
+    "jest/globals": true
+  },
+  "globals": {
+    "fetch": true,
+    "navigator": true
+  },
+  "parser": "babel-eslint",
+  "plugins": ["jest", "react-hooks"]  
+}

@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux'
-import profile from './profileReducer'
 import openChannel from './openChannelReducer'
 import openChannelCreate from './openChannelCreateReducer'
 import chat from './chatReducer'
@@ -9,7 +8,6 @@ import groupChannel from './groupChannelReducer'
 import groupChannelInvite from './groupChannelInviteReducer'
 
 export default combineReducers({
-  profile,
   openChannel,
   openChannelCreate,
   chat,
@@ -19,7 +17,6 @@ export default combineReducers({
   groupChannelInvite,
 })
 
-export profileReducer from './profileReducer'
 export openChannelReducer from './openChannelReducer'
 export openChannelCreateReducer from './openChannelCreateReducer'
 export chatReducer from './chatReducer'

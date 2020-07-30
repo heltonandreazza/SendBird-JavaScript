@@ -6,10 +6,10 @@
 // export const INIT_MENU = 'init_menu';
 // export const DISCONNECT_SUCCESS = 'disconnect_success';
 
-export const INIT_PROFILE = 'init_profile'
-export const GET_PROFILE_SUCCESS = 'get_profile_success'
-export const UPDATE_PROFILE_SUCCESS = 'update_profile_success'
-export const UPDATE_PROFILE_FAIL = 'update_profile_fail'
+// export const INIT_PROFILE = 'init_profile'
+// export const GET_PROFILE_SUCCESS = 'get_profile_success'
+// export const UPDATE_PROFILE_SUCCESS = 'update_profile_success'
+// export const UPDATE_PROFILE_FAIL = 'update_profile_fail'
 
 // Open Channel
 export const INIT_OPEN_CHANNEL = 'init_open_channel'

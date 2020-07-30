@@ -1,4 +1,3 @@
-export * from './profileActions'
 export * from './openChannelActions'
 export * from './openChannelCreateActions'
 export * from './chatActions'

@@ -1,139 +1,109 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { View, Text, TextInput, Image } from 'react-native';
-import { connect } from 'react-redux';
-import { initLogin, sendbirdLogin } from '../actions';
-import { sbRegisterPushToken } from '../sendbirdActions';
+import { sbConnect } from '../sendbirdActions';
+import { sbFCMregisterPushToken } from '../sendbirdActions';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { Button, Spinner } from '../components';
-import firebase from 'react-native-firebase';
 
-class Login extends Component {
-  static navigationOptions = {
-    header: null
-  };
+const Login = ({ navigation }) =>{
+  const [isLoading, setIsLoading] = useState(false)
+  const [userId, setUserId] = useState('')
+  const [nickname, setNickname] = useState('')
+  // global state
+  const [error, setError] = useState('')
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: false,
-      userId: '',
-      nickname: ''
-    };
-  }
-
-  componentDidMount() {
-    this.props.initLogin();
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    let { user, error } = this.props;
-    if (user && user !== prevProps.user) {
-      firebase
-        .messaging()
-        .getToken()
-        .then(pushToken => {
-          if (pushToken) {
-            console.info('pushToken', pushToken)
-            sbRegisterPushToken(pushToken)
-              .then(res => console.info('sbRegisterPushToken succeed!'))
-              .catch(err => console.err(res));
-          }
-        });
-      const resetAction = StackActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: 'Menu' })]
-      });
-      this.setState({ userId: '', nickname: '', isLoading: false }, () => {
-        this.props.navigation.dispatch(resetAction);
-      });
-    }
-
-    if (error && error !== prevProps.error) {
-      this.setState({ isLoading: false });
-    }
-  }
-
-  _onUserIdChanged = userId => {
-    this.setState({ userId });
-  };
-
-  _onNicknameChanged = nickname => {
-    this.setState({ nickname });
-  };
-
-  _onButtonPress = () => {
-    const { userId, nickname } = this.state;
-    this.setState({ isLoading: true }, () => {
-      this.props.sendbirdLogin({ userId, nickname });
+  function navigateToMenu () {
+    const resetAction = StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: 'Menu' })]
     });
+    navigation.dispatch(resetAction);
+  }
+
+  // sendbird
+  function loginFail (error) {
+    setError(error)
+    setIsLoading(false)
+  }
+
+  async function loginSuccess (user) {
+    await sbFCMregisterPushToken()
+    setUserId('')
+    setNickname('')
+    navigateToMenu()
+  }
+
+  function sendbirdLogin ({ userId, nickname }) {
+    return sbConnect(userId, nickname)
+      .then(loginSuccess)
+      .catch(loginFail);
   };
 
-  render() {
-    return (
-      <View style={styles.containerStyle}>
-        <Spinner visible={this.state.isLoading} />
-        <View style={styles.logoViewStyle}>
-          <Image style={{ width: 150, height: 150 }} source={require('../img/icon_sb_512.png')} />
-          <Text style={styles.logoTextTitle}>SendBird</Text>
-          <Text style={styles.logoTextSubTitle}>React Native</Text>
-        </View>
+  async function _onButtonPress () {
+    setIsLoading(true)
+    sendbirdLogin({ userId, nickname });
+  };
 
-        <View style={styles.inputViewStyle}>
-          <TextInput
-            label="User ID"
-            placeholder="User ID"
-            style={styles.inputStyle}
-            value={this.state.userId}
-            duration={100}
-            autoCorrect={false}
-            maxLength={16}
-            underlineColorAndroid="transparent"
-            onChangeText={this._onUserIdChanged}
-          />
-        </View>
-
-        <View style={styles.inputViewStyle}>
-          <TextInput
-            label="Nickname"
-            placeholder="Nickname"
-            style={styles.inputStyle}
-            value={this.state.nickname}
-            duration={100}
-            autoCorrect={false}
-            maxLength={16}
-            underlineColorAndroid="transparent"
-            onChangeText={this._onNicknameChanged}
-          />
-        </View>
-
-        <View style={styles.buttonStyle}>
-          <Button
-            title="CONNECT"
-            buttonStyle={{ backgroundColor: '#6e5baa' }}
-            onPress={this._onButtonPress}
-            disabled={this.state.isLoading}
-          />
-        </View>
-
-        <Text style={styles.errorTextStyle}>{this.props.error}</Text>
-
-        <View style={[styles.footerViewStyle]}>
-          <Text style={styles.footerTextStyle}>Sample UI v3.0.0 / SDK v.3.0.99</Text>
-        </View>
+  return (
+    <View style={styles.containerStyle}>
+      <Spinner visible={isLoading} />
+      <View style={styles.logoViewStyle}>
+        <Image style={{ width: 150, height: 150 }} source={require('../img/icon_sb_512.png')} />
+        <Text style={styles.logoTextTitle}>SendBird</Text>
+        <Text style={styles.logoTextSubTitle}>React Native</Text>
       </View>
-    );
-  }
+
+      <View style={styles.inputViewStyle}>
+        <TextInput
+          label="User ID"
+          placeholder="User ID"
+          style={styles.inputStyle}
+          value={userId}
+          duration={100}
+          autoCorrect={false}
+          maxLength={16}
+          underlineColorAndroid="transparent"
+          onChangeText={setUserId}
+        />
+      </View>
+
+      <View style={styles.inputViewStyle}>
+        <TextInput
+          label="Nickname"
+          placeholder="Nickname"
+          style={styles.inputStyle}
+          value={nickname}
+          duration={100}
+          autoCorrect={false}
+          maxLength={16}
+          underlineColorAndroid="transparent"
+          onChangeText={setNickname}
+        />
+      </View>
+
+      <View style={styles.buttonStyle}>
+        <Button
+          title="CONNECT"
+          buttonStyle={{ backgroundColor: '#6e5baa' }}
+          onPress={_onButtonPress}
+          disabled={isLoading}
+        />
+      </View>
+
+      <Text style={styles.errorTextStyle}>{error}</Text>
+
+      <View style={[styles.footerViewStyle]}>
+        <Text style={styles.footerTextStyle}>Sample UI v3.0.0 / SDK v.3.0.99</Text>
+      </View>
+    </View>
+  )
 }
 
-function mapStateToProps({ login }) {
-  const { error, user } = login;
-  return { error, user };
+Login.navigationOptions = {
+  header: null
 }
 
-export default connect(
-  mapStateToProps,
-  { initLogin, sendbirdLogin }
-)(Login);
+export default Login
 
 const styles = {
   containerStyle: {

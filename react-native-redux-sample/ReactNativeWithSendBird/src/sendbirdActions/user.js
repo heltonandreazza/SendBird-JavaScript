@@ -7,6 +7,16 @@ import firebase from 'react-native-firebase';
 // const APP_ID = '9DA1B1F4-0BE6-4DA8-82C5-2E81DAB56F23'; // sample
 const APP_ID = '97086E54-0E70-4F07-B1DD-F468915AA1B6'; // ours
 console.log(APP_ID)
+export const sbFCMregisterPushToken = async () => {
+  const pushToken = await firebase.messaging().getToken()
+
+  if (pushToken) {
+    await sbRegisterPushToken(pushToken)
+      .then(res => console.info('sbRegisterPushToken succeed!', pushToken))
+      .catch(err => console.err(res));
+  }
+}
+
 export const sbRegisterPushToken = () => {
   return new Promise((resolve, reject) => {
     const sb = SendBird.getInstance();

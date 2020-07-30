@@ -1,54 +1,57 @@
-import React, { Component, useState } from 'react';
-import { View, Text, TextInput, Image } from 'react-native';
-import { sbConnect } from '../sendbirdActions';
-import { sbFCMregisterPushToken } from '../sendbirdActions';
-import { NavigationActions, StackActions } from 'react-navigation';
-import { Button, Spinner } from '../components';
+import React, { useState } from 'react'
+import {
+  View, Text, TextInput, Image,
+} from 'react-native'
+import { NavigationActions, StackActions } from 'react-navigation'
+import { sbConnect, sbFCMregisterPushToken } from '../sendbirdActions'
+import iconSb512 from '../img/icon_sb_512.png'
 
-const Login = ({ navigation }) =>{
+import { Button, Spinner } from '../components'
+
+const Login = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [userId, setUserId] = useState('')
   const [nickname, setNickname] = useState('')
   // global state
   const [error, setError] = useState('')
 
-  function navigateToMenu () {
+  function navigateToMenu() {
     const resetAction = StackActions.reset({
       index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'Menu' })]
-    });
-    navigation.dispatch(resetAction);
+      actions: [NavigationActions.navigate({ routeName: 'Menu' })],
+    })
+    navigation.dispatch(resetAction)
   }
 
   // sendbird
-  function loginFail (error) {
+  function loginFail(error) {
     setError(error)
     setIsLoading(false)
   }
 
-  async function loginSuccess (user) {
+  async function loginSuccess() {
     await sbFCMregisterPushToken()
     setUserId('')
     setNickname('')
     navigateToMenu()
   }
 
-  function sendbirdLogin ({ userId, nickname }) {
+  function sendbirdLogin({ userId, nickname }) {
     return sbConnect(userId, nickname)
       .then(loginSuccess)
-      .catch(loginFail);
-  };
+      .catch(loginFail)
+  }
 
-  async function _onButtonPress () {
+  async function _onButtonPress() {
     setIsLoading(true)
-    sendbirdLogin({ userId, nickname });
-  };
+    sendbirdLogin({ userId, nickname })
+  }
 
   return (
     <View style={styles.containerStyle}>
       <Spinner visible={isLoading} />
       <View style={styles.logoViewStyle}>
-        <Image style={{ width: 150, height: 150 }} source={require('../img/icon_sb_512.png')} />
+        <Image style={{ width: 150, height: 150 }} source={iconSb512} />
         <Text style={styles.logoTextTitle}>SendBird</Text>
         <Text style={styles.logoTextSubTitle}>React Native</Text>
       </View>
@@ -100,7 +103,7 @@ const Login = ({ navigation }) =>{
 }
 
 Login.navigationOptions = {
-  header: null
+  header: null,
 }
 
 export default Login
@@ -108,22 +111,22 @@ export default Login
 const styles = {
   containerStyle: {
     backgroundColor: '#fff',
-    flex: 1
+    flex: 1,
   },
   logoViewStyle: {
     marginTop: 35,
     marginBottom: 5,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   logoTextTitle: {
     color: '#7d62d9',
     fontSize: 30,
-    fontWeight: '600'
+    fontWeight: '600',
   },
   logoTextSubTitle: {
     color: '#7d62d9',
     fontSize: 13,
-    fontWeight: '500'
+    fontWeight: '500',
   },
   inputViewStyle: {
     borderWidth: 1,
@@ -133,31 +136,31 @@ const styles = {
     paddingRight: 8,
     marginLeft: 28,
     marginRight: 28,
-    marginTop: 8
+    marginTop: 8,
   },
   inputStyle: {
     fontSize: 13,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   },
   buttonStyle: {
     paddingLeft: 12,
     paddingRight: 12,
-    marginTop: 50
+    marginTop: 50,
   },
   errorTextStyle: {
     alignSelf: 'center',
     fontSize: 12,
-    color: '#e03131'
+    color: '#e03131',
   },
   footerViewStyle: {
     paddingLeft: 28,
     paddingRight: 28,
     marginTop: 15,
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   footerTextStyle: {
     alignSelf: 'center',
     fontSize: 12,
-    color: '#8e8e8e'
-  }
-};
+    color: '#8e8e8e',
+  },
+}

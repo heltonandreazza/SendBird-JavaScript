@@ -55,23 +55,29 @@ import {
   sbMarkAsRead,
 } from '../sendbirdActions'
 
-export const openChannelProgress = (start) => ({
-  type: start ? OPEN_CHANNEL_PROGRESS_START : OPEN_CHANNEL_PROGRESS_END,
-})
+// export const openChannelProgress = (start) => {
+//   console.info('chatAction -> openChannelProgress')
+//   return {
+//     type: start ? OPEN_CHANNEL_PROGRESS_START : OPEN_CHANNEL_PROGRESS_END,
+//   }
+// }
 
-export const groupChannelProgress = (start) => ({
-  type: start ? GROUP_CHANNEL_PROGRESS_START : GROUP_CHANNEL_PROGRESS_END,
-})
+// export const groupChannelProgress = (start) => {
+//   console.info('chatAction -> groupChannelProgress')
+//   return {
+//     type: start ? GROUP_CHANNEL_PROGRESS_START : GROUP_CHANNEL_PROGRESS_END,
+//   }
+// }
 
 export const initChatScreen = () => {
-  console.info('initChatScreen')
+  console.info('OK chatAction -> initChatScreen')
   const sb = SendBird.getInstance()
   sb.removeAllChannelHandlers()
   return { type: INIT_CHAT_SCREEN }
 }
 
 export const getChannelTitle = (channelUrl, isOpenChannel) => {
-  console.info('getChannelTitle')
+  console.info('OK chatAction -> getChannelTitle')
   return (dispatch) => {
     if (isOpenChannel) {
       return sbGetOpenChannel(channelUrl)
@@ -101,7 +107,7 @@ export const getChannelTitle = (channelUrl, isOpenChannel) => {
 }
 
 export const createChatHandler = (channelUrl, isOpenChannel) => {
-  console.info('createChatHandler')
+  console.info('OK chatAction -> createChatHandler')
   return (dispatch) => {
     if (isOpenChannel) {
       return sbGetOpenChannel(channelUrl)
@@ -222,7 +228,7 @@ const registerGroupChannelHandler = (channelUrl, dispatch) => {
 }
 
 export const getPrevMessageList = (previousMessageListQuery) => {
-  console.info('getPrevMessageList')
+  console.info('OK chatAction -> getPrevMessageList')
   return (dispatch) => {
     if (previousMessageListQuery.hasMore) {
       return sbGetMessageList(previousMessageListQuery)
@@ -240,7 +246,7 @@ export const getPrevMessageList = (previousMessageListQuery) => {
 }
 
 export const onSendButtonPress = (channelUrl, isOpenChannel, textMessage) => {
-  console.info('onSendButtonPress')
+  console.info('OK2 chatAction -> onSendButtonPress')
   return (dispatch) => {
     if (isOpenChannel) {
       return sbGetOpenChannel(channelUrl)
@@ -274,70 +280,70 @@ const sendTextMessage = (dispatch, channel, textMessage) => {
   })
 }
 
-export const onUserBlockPress = (blockUserId) => {
-  console.info('onUserBlockPress')
-  return (dispatch) => sbUserBlock(blockUserId)
-    .then((user) => dispatch({ type: USER_BLOCK_SUCCESS }))
-    .catch((error) => dispatch({ type: USER_BLOCK_FAIL }))
-}
+// export const onUserBlockPress = (blockUserId) => {
+//   console.info('chatAction -> onUserBlockPress')
+//   return (dispatch) => sbUserBlock(blockUserId)
+//     .then((user) => dispatch({ type: USER_BLOCK_SUCCESS }))
+//     .catch((error) => dispatch({ type: USER_BLOCK_FAIL }))
+// }
 
-export const onUserMessagePress = (message) => {
-  console.info('onUserMessagePress')
-  return { type: USER_MESSAGE_PRESS, message }
-}
+// export const onUserMessagePress = (message) => {
+//   console.info('chatAction -> onUserMessagePress')
+//   return { type: USER_MESSAGE_PRESS, message }
+// }
 
-export const onMessageDelete = (channelUrl, isOpenChannel, message) => {
-  console.info('onMessageDelete')
-  return (dispatch) => {
-    let promise = null
-    if (isOpenChannel) {
-      promise = sbGetOpenChannel(channelUrl)
-    } else {
-      promise = sbGetGroupChannel(channelUrl)
-    }
-    return promise
-      .then((channel) => {
-        sbChannelDeleteMessage(channel, message)
-          .then((response) => dispatch({ type: OWN_MESSAGE_DELETED }))
-          .catch((error) => dispatch({ type: OWN_MESSAGE_DELETED_FAIL }))
-      })
-      .catch((error) => dispatch({ type: OWN_MESSAGE_DELETED_FAIL }))
-  }
-}
+// export const onMessageDelete = (channelUrl, isOpenChannel, message) => {
+//   console.info('chatAction -> onMessageDelete')
+//   return (dispatch) => {
+//     let promise = null
+//     if (isOpenChannel) {
+//       promise = sbGetOpenChannel(channelUrl)
+//     } else {
+//       promise = sbGetGroupChannel(channelUrl)
+//     }
+//     return promise
+//       .then((channel) => {
+//         sbChannelDeleteMessage(channel, message)
+//           .then((response) => dispatch({ type: OWN_MESSAGE_DELETED }))
+//           .catch((error) => dispatch({ type: OWN_MESSAGE_DELETED_FAIL }))
+//       })
+//       .catch((error) => dispatch({ type: OWN_MESSAGE_DELETED_FAIL }))
+//   }
+// }
 
-export const onUserUpdateMessage = (channelUrl, isOpenChannel, message, contents) => {
-  console.info('onUserUpdateMessage')
-  return (dispatch) => {
-    let promise = null
-    if (isOpenChannel) {
-      promise = sbGetOpenChannel(channelUrl)
-    } else {
-      promise = sbGetGroupChannel(channelUrl)
-    }
-    return promise
-      .then((channel) => sbChannelUpdateMessage(channel, message, contents)
-        .then((response) => dispatch({ type: OWN_MESSAGE_UPDATED, edited: message, contents }))
-        .catch((error) => {
-          dispatch({ type: OWN_MESSAGE_UPDATED_FAIL })
-        }))
-      .catch((error) => {
-        dispatch({ type: OWN_MESSAGE_UPDATED_FAIL })
-      })
-  }
-}
+// export const onUserUpdateMessage = (channelUrl, isOpenChannel, message, contents) => {
+//   console.info('chatAction -> onUserUpdateMessage')
+//   return (dispatch) => {
+//     let promise = null
+//     if (isOpenChannel) {
+//       promise = sbGetOpenChannel(channelUrl)
+//     } else {
+//       promise = sbGetGroupChannel(channelUrl)
+//     }
+//     return promise
+//       .then((channel) => sbChannelUpdateMessage(channel, message, contents)
+//         .then((response) => dispatch({ type: OWN_MESSAGE_UPDATED, edited: message, contents }))
+//         .catch((error) => {
+//           dispatch({ type: OWN_MESSAGE_UPDATED_FAIL })
+//         }))
+//       .catch((error) => {
+//         dispatch({ type: OWN_MESSAGE_UPDATED_FAIL })
+//       })
+//   }
+// }
 
-export const onUserMessageCopy = () => {
-  console.info('onUserMessageCopy')
-  return { type: MESSAGE_COPY }
-}
+// export const onUserMessageCopy = () => {
+//   console.info('chatAction -> onUserMessageCopy')
+//   return { type: MESSAGE_COPY }
+// }
 
-export const clearMessageSelection = () => {
-  console.info('clearMessageSelection')
-  return { type: USER_MESSAGE_SELECTION_CLEAR }
-}
+// export const clearMessageSelection = () => {
+//   console.info('chatAction -> clearMessageSelection')
+//   return { type: USER_MESSAGE_SELECTION_CLEAR }
+// }
 
 export const onFileButtonPress = (channelUrl, isOpenChannel, source) => {
-  console.info('onFileButtonPress')
+  console.info('OK chatAction -> onFileButtonPress')
   return (dispatch) => {
     if (isOpenChannel) {
       return sbGetOpenChannel(channelUrl)
@@ -375,21 +381,21 @@ const sendFileMessage = (dispatch, channel, file) => new Promise((resolve, rejec
 })
 
 export const typingStart = (channelUrl) => {
-  console.info('typingStart')
+  console.info('OK2 chatAction -> typingStart')
   return (dispatch) => sbTypingStart(channelUrl)
     .then((response) => dispatch({ type: SEND_TYPING_START_SUCCESS }))
     .catch((error) => dispatch({ type: SEND_TYPING_START_FAIL }))
 }
 
 export const typingEnd = (channelUrl) => {
-  console.info('typingEnd')
+  console.info('OK chatAction -> typingEnd')
   return (dispatch) => sbTypingEnd(channelUrl)
     .then((response) => dispatch({ type: SEND_TYPING_END_SUCCESS }))
     .catch((error) => dispatch({ type: SEND_TYPING_END_FAIL }))
 }
 
 export const channelExit = (channelUrl, isOpenChannel) => {
-  console.info('channelExit')
+  console.info('OK chatAction -> channelExit')
   return (dispatch) => {
     if (isOpenChannel) {
       return sbGetOpenChannel(channelUrl)

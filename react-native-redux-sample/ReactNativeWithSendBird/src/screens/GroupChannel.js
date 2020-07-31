@@ -1,142 +1,110 @@
-import React, { Component } from 'react';
-import { View, FlatList, TouchableHighlight, Text, Alert } from 'react-native';
-import { connect } from 'react-redux';
+/* eslint-disable no-param-reassign */
+import React, { useState, useLayoutEffect } from 'react'
 import {
-  initGroupChannel,
-  groupChannelProgress,
-  getGroupChannelList,
-  onGroupChannelPress,
-  onLeaveChannelPress,
-  onHideChannelPress,
-  clearSelectedGroupChannel,
-  createGroupChannelListHandler
-} from '../actions';
-import { Button, ListItem, Avatar, Spinner } from '../components';
-import Swipeout from 'react-native-swipeout';
-import { sbCreateGroupChannelListQuery, sbUnixTimestampToDate, sbGetChannelTitle } from '../sendbirdActions';
-import appStateChangeHandler from '../appStateChangeHandler';
+  View, FlatList, TouchableHighlight, Text, Alert, TextInput,
+} from 'react-native'
+import Swipeout from 'react-native-swipeout'
+import SendBird from 'sendbird'
+import {
+  Button, ListItem, Avatar, Spinner,
+} from '../components'
+import {
+  sbCreateGroupChannelListQuery,
+  sbUnixTimestampToDate,
+  sbGetChannelTitle,
+  sbGetGroupChannelList,
+  sbGetGroupChannel,
+  sbLeaveGroupChannel,
+  sbCreateGroupChannel,
+} from '../sendbirdActions'
+import appStateChangeHandler from '../appStateChangeHandler'
 
-class GroupChannel extends Component {
-  static navigationOptions = ({ navigation }) => {
-    const { params } = navigation.state;
-    return {
-      title: 'Group Channel',
-      headerLeft: (
-        <Button
-          containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
-          buttonStyle={{ paddingLeft: 14 }}
-          icon={{
-            name: 'chevron-left',
-            type: 'font-awesome',
-            color: '#7d62d9',
-            size: 18
-          }}
-          backgroundColor="transparent"
-          onPress={() => navigation.goBack()}
-        />
-      ),
-      headerRight: (
-        <Button
-          containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
-          buttonStyle={{ paddingLeft: 0, paddingRight: 14 }}
-          iconRight={{
-            name: 'user-plus',
-            type: 'font-awesome',
-            color: '#7d62d9',
-            size: 18
-          }}
-          backgroundColor="transparent"
-          onPress={() => {
-            navigation.navigate('GroupChannelInvite', {
-              title: 'Group Channel Create',
-              channelUrl: null
-            });
-          }}
-        />
-      )
-    };
-  };
+const GroupChannel = ({ navigation }) => {
+  const [isLoading, setIsLoading] = useState(false)
+  const [list, setList] = useState([])
+  const [inviteUserId, setInviteUserId] = useState(null)
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      joinChannel: false,
-      groupChannelListQuery: null
-    };
-    this.lastMessage = null;
+  useLayoutEffect(() => {
+    const willFocusSubsription = navigation.addListener('willFocus', () => {
+      _initGroupChannelList()
+    })
+    const appStateHandler = appStateChangeHandler.getInstance().addCallback('GROUP_CHANNEL', () => {
+      _initGroupChannelList()
+    })
+
+    return () => {
+      willFocusSubsription.remove()
+      appStateHandler()
+    }
+  }, [])
+
+  // sendbird
+  const initGroupChannel = () => {
+    const sb = SendBird.getInstance()
+    sb.removeAllChannelHandlers()
   }
 
-  componentDidMount() {
-    this.willFocusSubsription = this.props.navigation.addListener('willFocus', () => {
-      this._initGroupChannelList();
-    });
-    this.appStateHandler = appStateChangeHandler.getInstance().addCallback('GROUP_CHANNEL', () => {
-      this._initGroupChannelList();
-    });
+  const getGroupChannelList = (groupChannelListQuery) => {
+    if (groupChannelListQuery && groupChannelListQuery.hasNext) {
+      return sbGetGroupChannelList(groupChannelListQuery)
+        .then((channels) => {
+          setIsLoading(false)
+          setList(channels)
+        })
+        .catch(() => setIsLoading(false))
+    }
+    setIsLoading(false)
+    return Promise.resolve()
   }
-
-  componentWillUnmount() {
-    this.willFocusSubsription.remove();
-    this.appStateHandler();
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    const { channel } = this.props;
-
-    if (channel && this.props.channel !== prevProps.channel) {
-      this.props.clearSelectedGroupChannel();
-      this.props.navigation.navigate('Chat', {
+  const onGroupChannelPress = (channelUrl) => sbGetGroupChannel(channelUrl)
+    .then((channel) => {
+      navigation.navigate('Chat', {
         channelUrl: channel.url,
         title: sbGetChannelTitle(channel),
         memberCount: channel.memberCount,
         isOpenChannel: channel.isOpenChannel(),
-        _initListState: this._initJoinState
-      });
-    }
+      })
+    })
+
+  const onLeaveChannelPress = (channelUrl) => sbLeaveGroupChannel(channelUrl)
+    .then(() => _getGroupChannelList())
+    .catch(() => setIsLoading(false))
+
+  const _initGroupChannelList = () => {
+    initGroupChannel()
+    _getGroupChannelList()
   }
 
-  _initJoinState = () => {
-    this.setState({ joinChannel: false });
-  };
+  const createGroupChannel = (userIdList, isDistinct) => sbCreateGroupChannel(userIdList, isDistinct)
+    .then((channel) => {
+      setIsLoading(false)
+      setInviteUserId('')
+      navigation.navigate('Chat', {
+        channelUrl: channel.url,
+        title: sbGetChannelTitle(channel),
+        memberCount: channel.memberCount,
+        isOpenChannel: channel.isOpenChannel(),
+      })
+    })
+    .catch((error) => {
+      setIsLoading(false)
+    })
 
-  _initGroupChannelList = () => {
-    this.props.initGroupChannel();
-    this.props.createGroupChannelListHandler();
-    this._getGroupChannelList(true);
-  };
+  const _getGroupChannelList = () => {
+    setIsLoading(true)
+    const groupChannelListQuery = sbCreateGroupChannelListQuery()
+    getGroupChannelList(groupChannelListQuery)
+  }
 
-  _getGroupChannelList = init => {
-    this.props.groupChannelProgress(true);
-    if (init) {
-      const groupChannelListQuery = sbCreateGroupChannelListQuery();
-      this.setState({ groupChannelListQuery }, () => {
-        this.props.getGroupChannelList(this.state.groupChannelListQuery);
-      });
-    } else {
-      this.props.getGroupChannelList(this.state.groupChannelListQuery);
-    }
-  };
+  const _onChannelLeave = (channelUrl) => {
+    Alert.alert('Leave', 'Are you sure want to leave channel?', [
+      { text: 'Cancel' },
+      { text: 'OK', onPress: () => onLeaveChannelPress(channelUrl) },
+    ])
+  }
 
-  _onListItemPress = channelUrl => {
-    if (!this.state.joinChannel) {
-      this.setState({ joinChannel: true }, () => {
-        this.props.onGroupChannelPress(channelUrl);
-      });
-    }
-  };
-
-  _handleScroll = e => {
-    if (e.nativeEvent.contentOffset.y < -100 && !this.props.isLoading && !this.state.groupChannelListQuery.isLoading) {
-      this._initGroupChannelList();
-    }
-  };
-
-  _renderLastMessageTime = message => {
-    return message ? sbUnixTimestampToDate(message.createdAt) : null;
-  };
-
-  _renderTitle = channel => {
-    const { lastMessage } = channel;
+  const _renderTitle = (channel) => {
+    const { lastMessage } = channel
     return (
       <View style={styles.renderTitleViewStyle}>
         <View style={{ flexDirection: 'row' }}>
@@ -146,147 +114,171 @@ class GroupChannel extends Component {
           </View>
         </View>
         <View>
-          <Text style={styles.renderTitleTextStyle}>{this._renderLastMessageTime(lastMessage)}</Text>
+          <Text style={styles.renderTitleTextStyle}>{_renderLastMessageTime(lastMessage)}</Text>
         </View>
       </View>
-    );
-  };
+    )
+  }
 
-  _renderMessage = message => {
+  const _onListItemPress = (channelUrl) => {
+    onGroupChannelPress(channelUrl)
+  }
+
+  const _renderLastMessageTime = (message) => (message ? sbUnixTimestampToDate(message.createdAt) : null)
+
+  const _renderMessage = (message) => {
     if (message) {
-      const lastMessage = message.isFileMessage() ? message.name : message.message;
+      const lastMessage = message.isFileMessage() ? message.name : message.message
       if (lastMessage.length > 30) {
-        return lastMessage.substring(0, 27) + '...';
-      } else {
-        return lastMessage;
+        return `${lastMessage.substring(0, 27)}...`
       }
-    } else {
-      return null;
+      return lastMessage
     }
-  };
+    return null
+  }
 
-  _renderUnreadCount = count => {
+  const _renderUnreadCount = (count) => {
     if (count > 0) {
-      count = count > 9 ? '+9' : count.toString();
+      count = count > 9 ? '+9' : count.toString()
     } else {
-      count = null;
+      count = null
     }
 
     return count ? (
       <View style={styles.unreadCountViewStyle}>
         <Text style={styles.unreadCountTextStyle}>{count}</Text>
       </View>
-    ) : null;
-  };
+    ) : null
+  }
 
-  _renderLastMessage = channel => {
-    const { lastMessage, unreadMessageCount } = channel;
+  const _renderLastMessage = (channel) => {
+    const { lastMessage, unreadMessageCount } = channel
     return (
       <View style={styles.renderLastMessageViewStyle}>
-        <Text style={styles.renderLastMessageTextStyle}>{this._renderMessage(lastMessage)}</Text>
-        {this._renderUnreadCount(unreadMessageCount)}
+        <Text style={styles.renderLastMessageTextStyle}>{_renderMessage(lastMessage)}</Text>
+        {_renderUnreadCount(unreadMessageCount)}
       </View>
-    );
-  };
+    )
+  }
 
-  _onChannelLeave = channelUrl => {
-    Alert.alert('Leave', 'Are you sure want to leave channel?', [
-      { text: 'Cancel' },
-      { text: 'OK', onPress: () => this.props.onLeaveChannelPress(channelUrl) }
-    ]);
-  };
-
-  _onChannelHide = channelUrl => {
-    Alert.alert('Hide', 'Are you sure want to hide channel?', [
-      { text: 'Cancel' },
-      { text: 'OK', onPress: () => this.props.onHideChannelPress(channelUrl) }
-    ]);
-  };
-
-  _renderList = rowData => {
-    const channel = rowData.item;
-    let swipeoutBtns = [
+  const _renderList = (rowData) => {
+    const channel = rowData.item
+    const swipeoutBtns = [
       {
         text: 'Leave',
         type: 'delete',
         onPress: () => {
-          this._onChannelLeave(channel.url);
-        }
+          _onChannelLeave(channel.url)
+        },
       },
-      {
-        text: 'Hide',
-        type: 'default',
-        onPress: () => {
-          this._onChannelHide(channel.url);
-        }
-      }
-    ];
-    // if(! channel || ! channel.coverUrl) {
-    //   return null
-    // }
-    let avatar = <Avatar />;
+    ]
+    let avatar = <Avatar />
     if (channel.coverUrl) {
-      avatar = <Avatar source={{ uri: channel.coverUrl }} />;
+      avatar = <Avatar source={{ uri: channel.coverUrl }} />
     }
     return (
-      <Swipeout right={swipeoutBtns} autoClose={true}>
+      <Swipeout right={swipeoutBtns} autoClose>
         <ListItem
           component={TouchableHighlight}
           containerStyle={{ backgroundColor: '#fff' }}
           key={channel.url}
           avatar={avatar}
-          title={this._renderTitle(channel)}
+          title={_renderTitle(channel)}
           titleStyle={{ fontWeight: '500', fontSize: 16 }}
-          subtitle={this._renderLastMessage(channel)}
+          subtitle={_renderLastMessage(channel)}
           subtitleStyle={{ fontWeight: '300', fontSize: 11 }}
-          onPress={() => this._onListItemPress(channel.url)}
+          onPress={() => _onListItemPress(channel.url)}
         />
       </Swipeout>
-    );
-  };
+    )
+  }
 
-  render() {
-    return (
-      <View>
-        <Spinner visible={this.props.isLoading} />
-        <FlatList
-          renderItem={this._renderList}
-          data={this.props.list}
-          extraData={this.state}
-          keyExtractor={(item, index) => item.url}
-          onEndReached={() => this._getGroupChannelList(false)}
-          onEndReachedThreshold={0}
-          onScroll={this._handleScroll}
+  return (
+    <View>
+      <Spinner visible={isLoading} />
+      <View style={styles.containerCreateChannel}>
+        <TextInput
+          textFocusColor="#7d62d9"
+          textBlurColor="#000"
+          highlightColor="#7d62d9"
+          borderColor="#d9d9d9"
+          style={styles.inputStyle}
+          keyboardType="default"
+          autoCapitalize="none"
+          duration={100}
+          autoCorrect={false}
+          placeholder="User Id"
+          value={inviteUserId}
+          maxLength={12}
+          onChangeText={setInviteUserId}
+        />
+        <Button
+          containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
+          buttonStyle={{ padding: 20, paddingLeft: 16 }}
+          iconRight={{
+            name: 'user-plus',
+            type: 'font-awesome',
+            color: '#7d62d9',
+            size: 24,
+          }}
+          backgroundColor="transparent"
+          onPress={() => createGroupChannel([inviteUserId], true)}
         />
       </View>
-    );
-  }
+      <FlatList
+        renderItem={_renderList}
+        data={list}
+        keyExtractor={(item) => item.url}
+        onEndReachedThreshold={0}
+      />
+    </View>
+  )
 }
 
-function mapStateToProps({ groupChannel }) {
-  const { isLoading, list, channel } = groupChannel;
-  return { isLoading, list, channel };
-}
+GroupChannel.navigationOptions = ({ navigation }) => ({
+  title: 'Group Channel',
+  headerLeft: (
+    <Button
+      containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
+      buttonStyle={{ paddingLeft: 14 }}
+      icon={{
+        name: 'chevron-left',
+        type: 'font-awesome',
+        color: '#7d62d9',
+        size: 18,
+      }}
+      backgroundColor="transparent"
+      onPress={() => navigation.goBack()}
+    />
+  ),
+  headerRight: (
+    <Button
+      containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
+      buttonStyle={{ paddingLeft: 0, paddingRight: 14 }}
+      iconRight={{
+        name: 'user-plus',
+        type: 'font-awesome',
+        color: '#7d62d9',
+        size: 18,
+      }}
+      backgroundColor="transparent"
+      onPress={() => {
+        navigation.navigate('GroupChannelInvite', {
+          title: 'Group Channel Create',
+          channelUrl: null,
+        })
+      }}
+    />
+  ),
+})
 
-export default connect(
-  mapStateToProps,
-  {
-    initGroupChannel,
-    groupChannelProgress,
-    getGroupChannelList,
-    onGroupChannelPress,
-    onLeaveChannelPress,
-    onHideChannelPress,
-    clearSelectedGroupChannel,
-    createGroupChannelListHandler
-  }
-)(GroupChannel);
+export default GroupChannel
 
 const styles = {
   renderTitleViewStyle: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginLeft: 10
+    marginLeft: 10,
   },
   renderTitleMemberCountViewStyle: {
     backgroundColor: '#e3e3e3',
@@ -294,11 +286,11 @@ const styles = {
     justifyContent: 'center',
     paddingLeft: 4,
     paddingRight: 4,
-    marginLeft: 4
+    marginLeft: 4,
   },
   renderTitleTextStyle: {
     fontSize: 10,
-    color: '#878D99'
+    color: '#878D99',
   },
   unreadCountViewStyle: {
     width: 18,
@@ -308,21 +300,32 @@ const styles = {
     borderRadius: 9,
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   unreadCountTextStyle: {
     fontSize: 8,
     fontWeight: '500',
-    color: '#fff'
+    color: '#fff',
   },
   renderLastMessageViewStyle: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginLeft: 10
+    marginLeft: 10,
   },
   renderLastMessageTextStyle: {
     fontSize: 12,
     color: '#878D99',
-    marginTop: 3
-  }
-};
+    marginTop: 3,
+  },
+  containerCreateChannel: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  inputStyle: {
+    flex: 1,
+    fontSize: 13,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+}

@@ -29,30 +29,7 @@ export const sbAdjustMessage = (messageList, i) => {
   } else {
     message.isUser = false
   }
-  // if (message.sender) {
-  //   message.sender.isShow = true
-  //   if (!message.sender.profileUrl) {
-  //     message.sender.profileUrl = 'default-image'
-  //   }
-  // }
-
-  // if (i < list.length - 1) {
-  //   const prevMessage = list[i + 1]
-  //   if (message.isUserMessage() || message.isFileMessage()) {
-  //     if (prevMessage.isUserMessage() || prevMessage.isFileMessage()) {
-  //       if (prevMessage.sender.userId === message.sender.userId) {
-  //         message.sender.isShow = false
-  //       }
-  //     }
-  //   }
-  // }
   return message
-}
-
-export const sbAdjustMessageList = (list) => {
-  const messages = list.map(sbAdjustMessage)
-  console.info('sbAdjustMessageList resolved', messages)
-  return messages
 }
 
 export const sbUnixTimestampToDate = (unixTimestamp) => {

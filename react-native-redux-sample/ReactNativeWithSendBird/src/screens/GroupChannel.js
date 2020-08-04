@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-param-reassign */
 import React, { useState, useLayoutEffect } from 'react'
 import {
@@ -86,7 +87,7 @@ const GroupChannel = ({ navigation }) => {
         isOpenChannel: channel.isOpenChannel(),
       })
     })
-    .catch((error) => {
+    .catch(() => {
       setIsLoading(false)
     })
 
@@ -249,25 +250,6 @@ GroupChannel.navigationOptions = ({ navigation }) => ({
       }}
       backgroundColor="transparent"
       onPress={() => navigation.goBack()}
-    />
-  ),
-  headerRight: (
-    <Button
-      containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
-      buttonStyle={{ paddingLeft: 0, paddingRight: 14 }}
-      iconRight={{
-        name: 'user-plus',
-        type: 'font-awesome',
-        color: '#7d62d9',
-        size: 18,
-      }}
-      backgroundColor="transparent"
-      onPress={() => {
-        navigation.navigate('GroupChannelInvite', {
-          title: 'Group Channel Create',
-          channelUrl: null,
-        })
-      }}
     />
   ),
 })

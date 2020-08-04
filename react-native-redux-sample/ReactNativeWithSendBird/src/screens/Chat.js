@@ -19,14 +19,6 @@ import {
 } from '../sendbirdActions'
 
 // sendbird
-const uniqueList = (list) => list.reduce((uniqList, currentValue) => {
-  const ids = uniqList.map((item) => item.messageId)
-  if (ids.indexOf(currentValue.messageId) < 0) {
-    uniqList.push(currentValue)
-  }
-  return uniqList
-}, [])
-
 const getChannel = (isOpenChannel) => (isOpenChannel ? sbGetOpenChannel : sbGetGroupChannel)
 
 let flatList = null
@@ -60,6 +52,8 @@ const Chat = ({ navigation }) => {
     if (channel.isGroupChannel()) channel.markAsRead()
   }
 
+  const getChannel = (isOpenChannel) => (isOpenChannel ? sbGetOpenChannel : sbGetGroupChannel)
+
   const _getMessageList = async () => {
     const { channelUrl, isOpenChannel } = navigation.state.params
     try {
@@ -71,7 +65,7 @@ const Chat = ({ navigation }) => {
         const reverse = true
         previousMessageListQuery.load(limit, reverse, (messages, error) => {
           if (messages) {
-            setList(uniqueList(messages))
+            setList(messages)
             setIsLoading(false)
           }
         })
@@ -81,23 +75,36 @@ const Chat = ({ navigation }) => {
     }
   }
 
-  const registerCommonHandler = (channelHandler, channelUrl) => {
+  const registerOpenChannelHandler = (channelUrl) => {
+    const sb = SendBird.getInstance()
+    const channelHandler = new sb.ChannelHandler()
+
     channelHandler.onMessageReceived = (channel, message) => {
       if (channel.url === channelUrl) {
         if (channel.isGroupChannel()) channel.markAsRead()
-        setList(uniqueList([...[message], ...list]))
+        setList([message, ...list])
       }
     }
+
+    sb.addChannelHandler(channelUrl, channelHandler)
   }
 
   const registerGroupChannelHandler = (channelUrl) => {
     const sb = SendBird.getInstance()
     const channelHandler = new sb.ChannelHandler()
-    registerCommonHandler(channelHandler, channelUrl)
+
+    channelHandler.onMessageReceived = (channel, message) => {
+      if (channel.url === channelUrl) {
+        if (channel.isGroupChannel()) channel.markAsRead()
+        setList([message, ...list])
+      }
+    }
+
     channelHandler.onReadReceiptUpdated = (channel) => {
       setChannel(channel)
       _getMessageList()
     }
+
     channelHandler.onTypingStatusUpdated = (channel) => {
       let typing = ''
       if (channel.isTyping()) {
@@ -107,6 +114,7 @@ const Chat = ({ navigation }) => {
       }
       setTyping(typing)
     }
+
     sb.addChannelHandler(channelUrl, channelHandler)
   }
 
@@ -115,6 +123,7 @@ const Chat = ({ navigation }) => {
     const channel = await sbGetChannel(channelUrl)
     if (isOpenChannel) {
       channel.enter((response, error) => console.info('sbOpenChannelEnter', (response, error)))
+      registerOpenChannelHandler(channelUrl)
     } else {
       registerGroupChannelHandler(channelUrl)
     }
@@ -137,7 +146,7 @@ const Chat = ({ navigation }) => {
     const channel = await sbGetChannel(channelUrl)
 
     await channel.sendUserMessage(textMessage, (message, error) => {
-      setList(uniqueList([...[message], ...list]))
+      setList([message, ...list])
     })
     setTextMessage('')
     if (channel.isGroupChannel()) channel.endTyping()
@@ -161,7 +170,7 @@ const Chat = ({ navigation }) => {
         clearInterval(clearIntervalId)
         channel.sendFileMessage(file, data, customType, thumbSizeList, (message, error) => {
           if (message) {
-            setList(uniqueList([...[message], ...list]))
+            setList([message, ...list])
           }
         })
       }

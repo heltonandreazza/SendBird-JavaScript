@@ -4,15 +4,17 @@ import { MessageBubble } from './MessageBubble'
 
 const _renderUnreadCount = (readCount) => (readCount ? <Text style={{ fontSize: 10, color: '#f03e3e' }}>{readCount}</Text> : null)
 
-const MessageContainer = (props) => (
-  <View style={{ flexDirection: props.isUser ? 'row-reverse' : 'row' }}>
+const MessageContainer = ({
+  isUser, isShow, nickname, message, time, isEdited, readCount,
+}) => (
+  <View style={{ flexDirection: isUser ? 'row-reverse' : 'row' }}>
     <MessageBubble
-      isShow={props.isShow}
-      isUser={props.isUser}
-      nickname={props.nickname}
-      message={props.message}
-      time={props.time}
-      isEdited={props.isEdited}
+      isShow={isShow}
+      isUser={isUser}
+      nickname={nickname}
+      message={message}
+      time={time}
+      isEdited={isEdited}
     />
     <View
       style={{
@@ -21,7 +23,7 @@ const MessageContainer = (props) => (
         paddingRight: 4,
       }}
     >
-      {props.isUser ? _renderUnreadCount(props.readCount) : null}
+      {isUser ? _renderUnreadCount(readCount) : null}
     </View>
   </View>
 )

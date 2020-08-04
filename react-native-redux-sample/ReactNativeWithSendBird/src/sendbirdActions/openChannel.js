@@ -2,7 +2,6 @@ import SendBird from 'sendbird'
 
 export const sbCreateOpenChannelListQuery = () => {
   const sb = SendBird.getInstance()
-  console.info('sbCreateOpenChannelListQuery resolved')
   return sb.OpenChannel.createOpenChannelListQuery()
 }
 
@@ -11,7 +10,6 @@ export const sbGetOpenChannelList = (openChannelListQuery) => new Promise((resol
     if (error) {
       reject(error)
     } else {
-      console.info('sbGetOpenChannelList resolved', channels)
       resolve(channels)
     }
   })
@@ -23,7 +21,6 @@ export const sbGetOpenChannel = (channelUrl) => new Promise((resolve, reject) =>
     if (error) {
       reject(error)
     } else {
-      console.info('sbGetOpenChannel resolved', channel)
       resolve(channel)
     }
   })
@@ -39,7 +36,6 @@ export const sbCreateOpenChannel = (channelName) => new Promise((resolve, reject
     if (error) {
       reject('Create OpenChannel Failed.')
     } else {
-      console.info('sbCreateOpenChannel resolved', channel)
       resolve(channel)
     }
   })
@@ -50,7 +46,6 @@ export const sbOpenChannelEnter = (channel) => new Promise((resolve, reject) => 
     if (error) {
       reject(error)
     } else {
-      console.info('sbOpenChannelEnter resolved', channel)
       resolve(channel)
     }
   })
@@ -61,7 +56,6 @@ export const sbOpenChannelExit = (channel) => new Promise((resolve, reject) => {
     if (error) {
       reject(error)
     } else {
-      console.info('sbOpenChannelExit resolved', channel)
       resolve(channel)
     }
   })
@@ -70,7 +64,6 @@ export const sbOpenChannelExit = (channel) => new Promise((resolve, reject) => {
 export const sbCreateParticipantListQuery = (channelUrl) => new Promise((resolve, reject) => {
   sbGetOpenChannel(channelUrl)
     .then((channel) => {
-      console.info('sbCreateParticipantListQuery resolved', channel)
       resolve(channel.createParticipantListQuery())
     })
     .catch((error) => reject(error))
@@ -81,7 +74,6 @@ export const sbGetParticipantList = (participantListQuery) => new Promise((resol
     if (error) {
       reject(error)
     } else {
-      console.info('sbGetParticipantList resolved', participants)
       resolve(participants)
     }
   })

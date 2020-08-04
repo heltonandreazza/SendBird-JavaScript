@@ -1,28 +1,28 @@
-export default (function() {
-  var instance;
+export default (function () {
+  let instance
 
   function AppStateChangeHandler() {
-    this.cbs = {};
+    this.cbs = {}
     this.addCallback = (key, cb) => {
-      this.cbs[key] = cb;
+      this.cbs[key] = cb
       return () => {
-        delete this.cbs[key];
-      };
-    };
+        delete this.cbs[key]
+      }
+    }
 
     this.notify = () => {
-      for (let key in this.cbs) {
-        this.cbs[key]();
+      for (const key in this.cbs) {
+        this.cbs[key]()
       }
-    };
+    }
   }
 
   return {
-    getInstance: function() {
+    getInstance() {
       if (!instance) {
-        instance = new AppStateChangeHandler();
+        instance = new AppStateChangeHandler()
       }
-      return instance;
-    }
-  };
-})();
+      return instance
+    },
+  }
+}())

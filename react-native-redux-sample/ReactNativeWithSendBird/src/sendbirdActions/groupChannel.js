@@ -1,8 +1,8 @@
+/* eslint-disable max-len */
 import SendBird from 'sendbird'
 
 export const sbCreateGroupChannelListQuery = () => {
   const sb = SendBird.getInstance()
-  console.info('sbCreateGroupChannelListQuery resolved')
   return sb.GroupChannel.createMyGroupChannelListQuery()
 }
 
@@ -11,7 +11,6 @@ export const sbGetGroupChannelList = (groupChannelListQuery) => new Promise((res
     if (error) {
       reject(error)
     } else {
-      console.info('sbGetGroupChannelList resolved', channels)
       resolve(channels)
     }
   })
@@ -23,7 +22,6 @@ export const sbGetGroupChannel = (channelUrl) => new Promise((resolve, reject) =
     if (error) {
       reject(error)
     } else {
-      console.info('sbGetGroupChannel resolved', channel)
       resolve(channel)
     }
   })
@@ -37,7 +35,6 @@ export const sbLeaveGroupChannel = (channelUrl) => new Promise((resolve, reject)
         if (error) {
           reject(error)
         } else {
-          console.info('sbLeaveGroupChannel resolved', response)
           resolve(response)
         }
       })
@@ -53,7 +50,6 @@ export const sbHideGroupChannel = (channelUrl) => new Promise((resolve, reject) 
         if (error) {
           reject(error)
         } else {
-          console.info('sbHideGroupChannel resolved', response)
           resolve(response)
         }
       })
@@ -63,7 +59,6 @@ export const sbHideGroupChannel = (channelUrl) => new Promise((resolve, reject) 
 
 export const sbCreateUserListQuery = () => {
   const sb = SendBird.getInstance()
-  console.info('sbCreateUserListQuery resolved')
   return sb.createApplicationUserListQuery()
 }
 
@@ -72,7 +67,6 @@ export const sbGetUserList = (userListQuery) => new Promise((resolve, reject) =>
     if (error) {
       reject(error)
     } else {
-      console.info('sbGetUserList resolved', users)
       resolve(users)
     }
   })
@@ -84,7 +78,6 @@ export const sbCreateGroupChannel = (inviteUserIdList, isDistinct) => new Promis
     if (error) {
       reject(error)
     } else {
-      console.info('sbCreateGroupChannel resolved', channel)
       resolve(channel)
     }
   })

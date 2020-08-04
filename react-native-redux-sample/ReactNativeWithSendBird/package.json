@@ -31,9 +31,6 @@
     "react-native-vector-icons": "^6.5.0",
     "react-native-video": "^5.0.2",
     "react-navigation": "3.3.2",
-    "react-redux": "7.1.0",
-    "redux": "4.0.1",
-    "redux-thunk": "2.3.0",
     "rn-fetch-blob": "^0.11.2",
     "sendbird": "3.0.99"
   },

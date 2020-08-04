@@ -3,7 +3,7 @@ import {
   View, Text, TextInput, Image,
 } from 'react-native'
 import { NavigationActions, StackActions } from 'react-navigation'
-import { sbConnect, sbFCMregisterPushToken } from '../sendbirdActions'
+import { sbConnect, sbRegisterPushToken } from '../sendbirdActions'
 import iconSb512 from '../img/icon_sb_512.png'
 
 import { Button, Spinner } from '../components'
@@ -30,7 +30,7 @@ const Login = ({ navigation }) => {
   }
 
   async function loginSuccess() {
-    await sbFCMregisterPushToken()
+    await sbRegisterPushToken()
     setUserId('')
     setNickname('')
     navigateToMenu()

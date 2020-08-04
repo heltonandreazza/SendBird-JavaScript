@@ -1,16 +1,12 @@
 import React, { useState, useLayoutEffect } from 'react'
 import { View } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
-// import { connect } from 'react-redux'
 import firebase from 'react-native-firebase'
 import { NavigationActions, StackActions } from 'react-navigation'
-// import { sendbirdLogout, initMenu } from '../actions'
 import {
   sbConnect, sbDisconnect, sbOnTokenRefreshListener, sbOnMessageListener, sbUnregisterPushToken,
 } from '../sendbirdActions'
 import { Button, HR, Spinner } from '../components'
-
-const pushNotificationEnabled = false
 
 const Menu = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false)

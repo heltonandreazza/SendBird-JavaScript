@@ -1,104 +1,51 @@
 {
   "project_info": {
-    "project_number": "761404084173",
-    "firebase_url": "https://ze-deliveryman.firebaseio.com",
-    "project_id": "ze-deliveryman",
-    "storage_bucket": "ze-deliveryman.appspot.com"
+    "project_number": "45411407729",
+    "firebase_url": "https://yrdy-1078.firebaseio.com",
+    "project_id": "yrdy-1078",
+    "storage_bucket": "yrdy-1078.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:761404084173:android:d5545fde1bd796d64e7e84",
+        "mobilesdk_app_id": "1:45411407729:android:f78fa0e5edf2bb5f",
         "android_client_info": {
           "package_name": "com.reactnativewithsendbird"
         }
       },
       "oauth_client": [
         {
-          "client_id": "761404084173-e7s6mtom0k665trs8v382fibsbg0ojuq.apps.googleusercontent.com",
+          "client_id": "45411407729-b5dv50f6q3uhrmef6u1bdp0m9o8gdj97.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "45411407729-fbl74lc8l00amlfngnm99ka3hsa6jatg.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "45411407729-5eic3olseii1l45rp46u4ff6itipjno1.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "45411407729-jjelgac8298ug989b94ltmqp4bhr5jpo.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBqpolRp4FamIxHolL0-i8fKLfQ_UozcNE"
-        },
-        {
-          "current_key": "AIzaSyDQuwxa-TyqnT-BRiFAYBzYfSL1FjVTBJ0"
+          "current_key": "AIzaSyAth1oIDq8leNpjJwTc6SjgnsuikF-gKLM"
         }
       ],
       "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "761404084173-e7s6mtom0k665trs8v382fibsbg0ojuq.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:761404084173:android:c8e00ff03eff8ae74e7e84",
-        "android_client_info": {
-          "package_name": "com.zedelivery.deliveryman"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "761404084173-e7s6mtom0k665trs8v382fibsbg0ojuq.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBqpolRp4FamIxHolL0-i8fKLfQ_UozcNE"
+        "analytics_service": {
+          "status": 1
         },
-        {
-          "current_key": "AIzaSyDQuwxa-TyqnT-BRiFAYBzYfSL1FjVTBJ0"
-        }
-      ],
-      "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "761404084173-e7s6mtom0k665trs8v382fibsbg0ojuq.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:761404084173:android:58515644336d13324e7e84",
-        "android_client_info": {
-          "package_name": "com.zedelivery.deliveryman.debug"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "761404084173-e7s6mtom0k665trs8v382fibsbg0ojuq.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBqpolRp4FamIxHolL0-i8fKLfQ_UozcNE"
+          "status": 1,
+          "other_platform_oauth_client": []
         },
-        {
-          "current_key": "AIzaSyDQuwxa-TyqnT-BRiFAYBzYfSL1FjVTBJ0"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "761404084173-e7s6mtom0k665trs8v382fibsbg0ojuq.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+        "ads_service": {
+          "status": 2
         }
       }
     }

@@ -1,25 +1,19 @@
-import React, { Component } from 'react';
-import { View, Text } from 'react-native';
-import { Icon } from 'react-native-elements';
+import React, { Component } from 'react'
+import { View, Text } from 'react-native'
+import { Icon } from 'react-native-elements'
 
-const TextItem = props => {
-  return (
-    <View style={{}}>
-      <Text style={{ fontSize: 12, color: props.isUser ? '#fff' : '#000' }}>{props.message}</Text>
-    </View>
-  );
-};
+const TextItem = (props) => (
+  <View style={{}}>
+    <Text style={{ fontSize: 12, color: props.isUser ? '#fff' : '#000' }}>{props.message}</Text>
+  </View>
+)
 
 class FileItem extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   _renderMessage() {
     if (this.props.message.length > 13) {
-      return this.props.message.substring(0, 10) + '...';
+      return `${this.props.message.substring(0, 10)}...`
     }
-    return this.props.message;
+    return this.props.message
   }
 
   render() {
@@ -35,10 +29,10 @@ class FileItem extends Component {
         />
         <Text style={{ marginLeft: 8 }}>{this._renderMessage()}</Text>
       </View>
-    );
+    )
   }
 }
 
-const styles = {};
+const styles = {}
 
-export { TextItem, FileItem };
+export { TextItem, FileItem }

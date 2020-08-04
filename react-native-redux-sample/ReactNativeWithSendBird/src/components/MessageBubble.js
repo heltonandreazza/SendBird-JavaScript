@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import React, { Component } from 'react'
 import { View, Text } from 'react-native'
 import Video from 'react-native-video'
@@ -9,10 +10,6 @@ const _isVideo = (props) => props.message.type.match(/^video\/.+$/)
 const _isImage = (props) => props.message.type.match(/^image\/.+$/)
 
 export class MessageBubble extends Component {
-  constructor(props) {
-    super(props)
-  }
-
   _renderNickname = (nickname) => (nickname ? <Text style={{ fontSize: 9, color: '#7048e8', paddingBottom: 4 }}>{nickname}</Text> : null);
 
   _renderMessageItem = (message) => {

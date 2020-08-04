@@ -1,10 +1,6 @@
-import React, { Component } from 'react';
-import SpinnerComponent from 'react-native-loading-spinner-overlay';
+import React from 'react'
+import SpinnerComponent from 'react-native-loading-spinner-overlay'
 
-class Spinner extends Component {
-  render() {
-    return <SpinnerComponent visible={this.props.visible} textStyle={{ color: '#fff' }} />;
-  }
-}
+const Spinner = ({ visible }) => <SpinnerComponent visible={visible} textStyle={{ color: '#fff' }} />
 
-export { Spinner };
+export { Spinner }

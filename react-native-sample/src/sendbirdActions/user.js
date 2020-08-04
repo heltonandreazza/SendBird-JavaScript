@@ -33,7 +33,27 @@ export const sbOnTokenRefreshListener = () => firebase.messaging().onTokenRefres
 
 export const sbRegisterPushToken = () => new Promise((resolve, reject) => {
   const sb = SendBird.getInstance()
-  if (Platform.OS === 'android') {
+  if (Platform.OS === 'ios') {
+    // WARNING! FCM token doesn't work in request to APNs.
+    // Use APNs token here instead.
+    firebase
+      .messaging()
+      .ios.getAPNSToken()
+      .then(token => {
+        if (token) {
+          sb.registerAPNSPushTokenForCurrentUser(token, (result, error) => {
+            if (!error) {
+              resolve();
+            } else reject(error);
+          });
+        } else {
+          resolve();
+        }
+      })
+      .catch(error => {
+        reject(error);
+      });
+  } else {
     firebase
       .messaging()
       .getToken()

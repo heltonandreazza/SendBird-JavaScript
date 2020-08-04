@@ -82,7 +82,7 @@ const Chat = ({ navigation }) => {
     channelHandler.onMessageReceived = (channel, message) => {
       if (channel.url === channelUrl) {
         if (channel.isGroupChannel()) channel.markAsRead()
-        setList([message, ...list])
+        _getMessageList()
       }
     }
 
